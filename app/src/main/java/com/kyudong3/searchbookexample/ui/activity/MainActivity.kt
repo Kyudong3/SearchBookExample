@@ -24,6 +24,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                 0 -> tab.text = "검색"
                 else -> tab.text = "즐겨찾기"
             }
-        }
+        }.attach()
     }
 }
