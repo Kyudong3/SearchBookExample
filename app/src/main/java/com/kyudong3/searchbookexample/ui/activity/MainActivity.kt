@@ -10,8 +10,6 @@ import com.kyudong3.searchbookexample.ui.widget.recyclerview.SearchBookPagerAdap
 
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
-//    private val tabItems = listOf<String>("검색", "즐겨찾기")
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
