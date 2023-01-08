@@ -55,7 +55,10 @@ dependencies {
 
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
     implementation "com.facebook.stetho:stetho:$stetho_version"
-    implementation "com.facebook.stetho:stetho-okhttp:$stetho_version"
+    implementation "com.facebook.stetho:stetho-okhttp3:$stetho_version"
+
+    implementation "io.reactivex.rxjava3:rxkotlin:$rxjava_version"
+    implementation "io.reactivex.rxjava3:rxandroid:$rxjava_version"
 
     testImplementation "junit:junit:$junit_version"
     androidTestImplementation "androidx.test.ext:junit:$junit_test_version"

@@ -17,6 +17,8 @@ buildscript {
 
         okhttp_version = "5.0.0-alpha.11"
         stetho_version = "1.6.0"
+
+        rxjava_version = "3.0.0"
     }
 }
 
