@@ -1,5 +1,7 @@
 package com.kyudong3.searchbookexample.viewmodels
 
+import android.util.Log
+import androidx.databinding.Bindable
 import com.kyudong3.searchbookexample.base.BaseViewModel
 import com.kyudong3.searchbookexample.repository.SearchBookRepository
 
@@ -8,9 +10,10 @@ class SearchBookViewModel(
     private val searchBookRepository: SearchBookRepository
 ) : BaseViewModel() {
 
-    var bookName: String = ""
+    @get:Bindable
+    var searchQuery: String = ""
 
-    init {
-        bookName = "개발 7년차, 매니저 1일차"
+    fun onClickSearch() {
+        Log.e("ddd", searchQuery)
     }
 }
