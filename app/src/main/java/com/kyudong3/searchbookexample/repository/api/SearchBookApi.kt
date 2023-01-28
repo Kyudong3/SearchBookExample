@@ -14,13 +14,13 @@ interface SearchBookApi {
     fun searchBook(
         @Query("query")
         query: String,
-        @Query("sort")      // Not necessary
+        @Query("sort")      // 결과 문서 정렬 방식, accuracy(정확도순) 또는 latest(발간일순), 기본값 accuracy
         sort: String? = null,
-        @Query("page")      // Not necessary
+        @Query("page")      // 결과 페이지 번호, 1~50 사이의 값, 기본 값 1
         page: Int? = null,
-        @Query("size")      // Not necessary
+        @Query("size")      // 한 페이지에 보여질 문서 수, 1~50 사이의 값, 기본 값 10
         size: Int? = null,
-        @Query("target")    // Not necessary
+        @Query("target")    // 검색 필드 제한
         target: String? = null,
         @Header("Authorization")
         apiKey: String? = "KakaoAK ${BuildConfig.KAKAO_API_KEY}"

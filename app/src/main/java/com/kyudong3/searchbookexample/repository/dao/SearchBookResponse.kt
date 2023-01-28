@@ -6,5 +6,5 @@ import com.kyudong3.searchbookexample.data.dto.BookMeta
 
 data class SearchBookResponse(
     val meta: BookMeta,
-    val Documents: List<BookDocument>
+    val documents: List<BookDocument>
 )
