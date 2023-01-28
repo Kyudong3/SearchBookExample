@@ -1,8 +1,10 @@
 package com.kyudong3.searchbookexample.repository.api
 
+import com.kyudong3.searchbookexample.BuildConfig
 import com.kyudong3.searchbookexample.repository.dao.SearchBookResponse
 import io.reactivex.rxjava3.core.Single
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.Query
 
 
@@ -19,6 +21,8 @@ interface SearchBookApi {
         @Query("size")      // Not necessary
         size: Int? = null,
         @Query("target")    // Not necessary
-        target: String? = null
+        target: String? = null,
+        @Header("Authorization")
+        apiKey: String? = "KakaoAK ${BuildConfig.KAKAO_API_KEY}"
     ): Single<SearchBookResponse>
 }
