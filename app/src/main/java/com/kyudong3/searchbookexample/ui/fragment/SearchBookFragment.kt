@@ -16,22 +16,22 @@ class SearchBookFragment : BaseFragment<FragmentSearchBookBinding>(R.layout.frag
     @Inject
     lateinit var viewModel: SearchBookViewModel
 
-    private val searchBookAdapter = SearchBookListAdapter()
+    @Inject
+    lateinit var searchBookListAdapter : SearchBookListAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.setVariable(BR.viewModel, viewModel)
+        binding.setVariable(BR.listAdapter, searchBookListAdapter)
         binding.executePendingBindings()
-
-        binding.rvBook.adapter = searchBookAdapter
 
         observe()
     }
 
     private fun observe() {
         viewModel.bookData.observe(viewLifecycleOwner) {
-            searchBookAdapter.submitList(it)
+            searchBookListAdapter.submitList(it)
         }
     }
 

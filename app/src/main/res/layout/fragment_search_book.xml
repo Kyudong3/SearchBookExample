@@ -8,6 +8,10 @@
             name="viewModel"
             type="com.kyudong3.searchbookexample.viewmodels.SearchBookViewModel" />
 
+        <variable
+            name="listAdapter"
+            type="com.kyudong3.searchbookexample.ui.widget.recyclerview.SearchBookListAdapter" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,8 +21,15 @@
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/search_edit_text"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:background="@android:color/transparent"
+            android:hint="@string/hint_book_title"
+            android:maxLength="20"
+            android:maxLines="1"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
             android:text="@={viewModel.searchQuery}"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_search"
             app:layout_constraintEnd_toStartOf="@+id/btn_search"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -39,12 +50,14 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_book"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:clipToPadding="false"
             android:paddingTop="8dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/search_edit_text" />
+            app:layout_constraintTop_toBottomOf="@+id/search_edit_text"
+            app:listAdapter="@{listAdapter}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

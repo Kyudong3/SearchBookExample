@@ -6,6 +6,7 @@ import com.kyudong3.searchbookexample.di.scope.FragmentScope
 import com.kyudong3.searchbookexample.di.scope.ViewModelKey
 import com.kyudong3.searchbookexample.repository.SearchBookRepository
 import com.kyudong3.searchbookexample.ui.fragment.SearchBookFragment
+import com.kyudong3.searchbookexample.ui.widget.recyclerview.SearchBookListAdapter
 import com.kyudong3.searchbookexample.viewmodels.SearchBookViewModel
 import com.kyudong3.searchbookexample.viewmodels.ViewModelFactory
 import dagger.Module
@@ -36,4 +37,8 @@ object SearchBookModule {
     fun provideSearchBookViewModel(
         searchBookRepository: SearchBookRepository
     ): ViewModel = SearchBookViewModel(searchBookRepository)
+
+    @Provides
+    @FragmentScope
+    fun provideSearchBookListAdapter(): SearchBookListAdapter = SearchBookListAdapter()
 }
