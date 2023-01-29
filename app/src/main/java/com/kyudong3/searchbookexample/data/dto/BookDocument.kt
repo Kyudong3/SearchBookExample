@@ -7,7 +7,6 @@ data class BookDocument(
     val title: String,      // 도서 제목
     val contents: String,   // 도서 소개
     val url: String,        // 도서 상세 URL
-    val isbn: String,       // ISBN10(10자리) 또는 ISBN13(13자리) 형식의 국제 표준 도서번호(International Standard Book Number)
     val authors: List<String>, // 도서 저자 리스트
     val publisher: String,  // 도서 출판사
     val price: Int,         // 도서 판매가

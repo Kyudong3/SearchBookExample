@@ -27,13 +27,16 @@ class SearchBookFragment : BaseFragment<FragmentSearchBookBinding>(R.layout.frag
         binding.executePendingBindings()
 
         observe()
+        setSearchBookClickListener()
     }
 
     private fun observe() {
         viewModel.bookData.observe(viewLifecycleOwner) {
             searchBookListAdapter.submitList(it)
         }
+    }
 
+    private fun setSearchBookClickListener() {
         searchBookListAdapter.setItemClickListener { view, bookDocument ->
         }
     }
