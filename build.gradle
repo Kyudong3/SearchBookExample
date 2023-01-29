@@ -21,6 +21,8 @@ buildscript {
         rxjava_version = "3.0.0"
 
         lifecycle_version = "2.5.1"
+
+        glide_version = "4.14.2"
     }
 }
 
