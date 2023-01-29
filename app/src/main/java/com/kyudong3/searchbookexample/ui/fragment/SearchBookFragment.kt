@@ -17,7 +17,7 @@ class SearchBookFragment : BaseFragment<FragmentSearchBookBinding>(R.layout.frag
     lateinit var viewModel: SearchBookViewModel
 
     @Inject
-    lateinit var searchBookListAdapter : SearchBookListAdapter
+    lateinit var searchBookListAdapter: SearchBookListAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -32,6 +32,9 @@ class SearchBookFragment : BaseFragment<FragmentSearchBookBinding>(R.layout.frag
     private fun observe() {
         viewModel.bookData.observe(viewLifecycleOwner) {
             searchBookListAdapter.submitList(it)
+        }
+
+        searchBookListAdapter.setItemClickListener { view, bookDocument ->
         }
     }
 

@@ -1,6 +1,7 @@
 package com.kyudong3.searchbookexample.base
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -14,8 +15,15 @@ abstract class BaseListAdapter<T>(
 
     abstract val layout: Int
 
+    private var itemClickListener: ((View, T) -> Unit)? = null
+
+    fun setItemClickListener(itemClickListener: (View, T) -> Unit) {
+        this.itemClickListener = itemClickListener
+    }
+
     abstract fun makeViewHolder(
-        binding: ViewDataBinding
+        binding: ViewDataBinding,
+        itemClickListener: ((View, T) -> Unit)?
     ): BaseViewHolder<T>
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<T> {
@@ -25,7 +33,7 @@ abstract class BaseListAdapter<T>(
             parent,
             false
         )
-        return makeViewHolder(binding)
+        return makeViewHolder(binding, itemClickListener)
     }
 
     override fun getItemCount(): Int = currentList.size

@@ -13,7 +13,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="96dp">
+        android:layout_height="96dp"
+        android:layout_marginTop="4dp">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_thumbnail"
@@ -64,9 +65,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@{item.status}"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/iv_favorite"
             app:layout_constraintStart_toEndOf="@+id/iv_thumbnail"
-            app:layout_constraintBottom_toBottomOf="parent"
             tools:text="재고없음" />
 
         <androidx.appcompat.widget.AppCompatImageView
