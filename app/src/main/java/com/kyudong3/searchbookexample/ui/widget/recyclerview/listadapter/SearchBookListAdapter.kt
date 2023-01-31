@@ -1,4 +1,4 @@
-package com.kyudong3.searchbookexample.ui.widget.recyclerview
+package com.kyudong3.searchbookexample.ui.widget.recyclerview.listadapter
 
 import android.view.View
 import androidx.databinding.ViewDataBinding

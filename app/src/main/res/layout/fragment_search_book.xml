@@ -10,7 +10,7 @@
 
         <variable
             name="listAdapter"
-            type="com.kyudong3.searchbookexample.ui.widget.recyclerview.SearchBookListAdapter" />
+            type="com.kyudong3.searchbookexample.ui.widget.recyclerview.listadapter.SearchBookListAdapter" />
 
     </data>
 

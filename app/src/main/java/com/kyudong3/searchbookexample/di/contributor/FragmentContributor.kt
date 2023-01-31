@@ -1,6 +1,7 @@
 package com.kyudong3.searchbookexample.di.contributor
 
 import com.kyudong3.searchbookexample.di.modules.ViewModelFactoryModule
+import com.kyudong3.searchbookexample.di.modules.fragment.BookmarkModule
 import com.kyudong3.searchbookexample.di.modules.fragment.SearchBookModule
 import com.kyudong3.searchbookexample.di.scope.FragmentScope
 import com.kyudong3.searchbookexample.ui.fragment.BookmarkFragment
@@ -19,6 +20,8 @@ abstract class FragmentContributor {
     abstract fun provideSearchBookFragment(): SearchBookFragment
 
     @FragmentScope
-    @ContributesAndroidInjector
+    @ContributesAndroidInjector(
+        modules = [ViewModelFactoryModule::class, BookmarkModule::class]
+    )
     abstract fun provideBookmarkFragment(): BookmarkFragment
 }

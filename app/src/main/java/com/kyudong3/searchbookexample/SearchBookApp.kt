@@ -8,10 +8,12 @@ import dagger.android.DaggerApplication
 
 class SearchBookApp : DaggerApplication() {
 
-    // DaggerApplication의 메서드 구현(재정의) - AppComponent는 AndroidInjector를 상속했기에 반환Type에 캐스팅
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
-        // AppComponent 인스턴스 반환
         return DaggerAppComponent.create()
+    }
+
+    init {
+        instance = this
     }
 
     override fun onCreate() {
@@ -20,5 +22,10 @@ class SearchBookApp : DaggerApplication() {
         if (BuildConfig.DEBUG) {
             Stetho.initializeWithDefaults(this)
         }
+    }
+
+    companion object {
+        lateinit var instance: SearchBookApp
+            private set
     }
 }
