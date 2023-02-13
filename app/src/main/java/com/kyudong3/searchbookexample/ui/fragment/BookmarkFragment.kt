@@ -26,13 +26,19 @@ class BookmarkFragment : BaseFragment<FragmentBookmarkBinding>(R.layout.fragment
         binding.setVariable(BR.listAdapter, searchBookListAdapter)
         binding.executePendingBindings()
 
-//        viewModel.getLocalBookDocuments()
         observe()
+        setSearchBookClickListener()
     }
 
     private fun observe() {
         viewModel.bookData.observe(viewLifecycleOwner) {
             searchBookListAdapter.submitList(it)
+        }
+    }
+
+    private fun setSearchBookClickListener() {
+        searchBookListAdapter.setItemClickListener { _, bookDocument ->
+            viewModel.onClickBookmark(bookDocument)
         }
     }
 

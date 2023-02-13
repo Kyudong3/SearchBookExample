@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.kyudong3.searchbookexample.base.BaseViewModel
 import com.kyudong3.searchbookexample.data.dto.BookDocument
 import com.kyudong3.searchbookexample.data.mapper.toData
+import com.kyudong3.searchbookexample.data.mapper.toEntity
 import com.kyudong3.searchbookexample.db.repository.BookDocumentRepository
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -28,6 +29,13 @@ class BookmarkViewModel(
                 }
                 _bookData.postValue(bookList)
             }
+    }
+
+    fun onClickBookmark(bookDocument: BookDocument) {
+        bookDocumentRepository
+            .deleteBookDocument(bookDocument.toEntity())
+            .subscribeOn(Schedulers.io())
+            .baseSubscribe { }
     }
 
     fun onResume() {
