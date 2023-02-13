@@ -7,12 +7,15 @@ import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import com.kyudong3.searchbookexample.utils.delegator.DisposableDelegator
+import com.kyudong3.searchbookexample.utils.delegator.DisposableDelegatorImpl
 import dagger.android.support.DaggerFragment
 
 
 abstract class BaseFragment<T : ViewDataBinding>(
     @LayoutRes val layoutRes: Int
-) : DaggerFragment() {
+) : DaggerFragment(),
+    DisposableDelegator by DisposableDelegatorImpl() {
 
     private var _binding: T? = null
     protected val binding get() = _binding!!
@@ -28,7 +31,8 @@ abstract class BaseFragment<T : ViewDataBinding>(
             container,
             false
         )
-        _binding?.lifecycleOwner = this
+        // FIXME : lifecycleOwner 사용하는 이유
+        _binding?.lifecycleOwner = viewLifecycleOwner
         return binding.root
     }
 }
