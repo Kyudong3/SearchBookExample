@@ -1,5 +1,6 @@
 package com.kyudong3.searchbookexample.di.modules.fragment
 
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.kyudong3.searchbookexample.db.repository.BookDocumentRepository
@@ -16,6 +17,12 @@ import dagger.multibindings.IntoMap
 
 @Module
 object BookmarkModule {
+
+    @Provides
+    @FragmentScope
+    fun provideFragment(
+        fragment: BookmarkFragment
+    ): Fragment = fragment
 
     @Provides
     @FragmentScope
@@ -40,5 +47,8 @@ object BookmarkModule {
 
     @Provides
     @FragmentScope
-    fun provideSearchBookListAdapter(): SearchBookListAdapter = SearchBookListAdapter()
+    fun provideSearchBookListAdapter(
+        fragment: BookmarkFragment
+    ): SearchBookListAdapter =
+        SearchBookListAdapter(itemClickListener = fragment.bookmarkItemClickListener)
 }

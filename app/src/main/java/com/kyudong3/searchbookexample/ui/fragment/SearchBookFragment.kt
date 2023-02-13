@@ -5,6 +5,7 @@ import android.view.View
 import com.kyudong3.searchbookexample.BR
 import com.kyudong3.searchbookexample.R
 import com.kyudong3.searchbookexample.base.BaseFragment
+import com.kyudong3.searchbookexample.data.dto.BookDocument
 import com.kyudong3.searchbookexample.databinding.FragmentSearchBookBinding
 import com.kyudong3.searchbookexample.ui.widget.dialog.RxAlertDialog
 import com.kyudong3.searchbookexample.ui.widget.recyclerview.listadapter.SearchBookListAdapter
@@ -20,6 +21,13 @@ class SearchBookFragment : BaseFragment<FragmentSearchBookBinding>(R.layout.frag
     @Inject
     lateinit var searchBookListAdapter: SearchBookListAdapter
 
+    val bookmarkItemClickListener: ((BookDocument, Int) -> Unit)? by lazy {
+        { document, position ->
+            searchBookListAdapter.notifyItemChanged(position)
+            viewModel.onClickBookmark(document)
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -28,7 +36,6 @@ class SearchBookFragment : BaseFragment<FragmentSearchBookBinding>(R.layout.frag
         binding.executePendingBindings()
 
         observe()
-        setSearchBookClickListener()
     }
 
     private fun observe() {
@@ -39,12 +46,6 @@ class SearchBookFragment : BaseFragment<FragmentSearchBookBinding>(R.layout.frag
             } else {
                 searchBookListAdapter.submitList(it)
             }
-        }
-    }
-
-    private fun setSearchBookClickListener() {
-        searchBookListAdapter.setItemClickListener { _, bookDocument ->
-            viewModel.onClickBookmark(bookDocument)
         }
     }
 

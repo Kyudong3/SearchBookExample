@@ -1,6 +1,5 @@
 package com.kyudong3.searchbookexample.ui.widget.recyclerview.listadapter
 
-import android.view.View
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.DiffUtil
 import com.kyudong3.searchbookexample.R
@@ -10,14 +9,13 @@ import com.kyudong3.searchbookexample.data.dto.BookDocument
 import com.kyudong3.searchbookexample.ui.widget.recyclerview.viewholder.SearchBookViewHolder
 
 
-class SearchBookListAdapter : BaseListAdapter<BookDocument>(diffUtil) {
+class SearchBookListAdapter(
+    private val itemClickListener: ((BookDocument, Int) -> Unit)?
+) : BaseListAdapter<BookDocument>(diffUtil) {
 
     override val layout: Int = R.layout.item_book
 
-    override fun makeViewHolder(
-        binding: ViewDataBinding,
-        itemClickListener: ((View, BookDocument) -> Unit)?
-    ): BaseViewHolder<BookDocument> =
+    override fun makeViewHolder(binding: ViewDataBinding): BaseViewHolder<BookDocument> =
         SearchBookViewHolder.newInstance(binding, itemClickListener)
 
     override fun onBindViewHolder(holder: BaseViewHolder<BookDocument>, position: Int) {

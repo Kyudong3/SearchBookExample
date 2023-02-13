@@ -31,7 +31,6 @@ abstract class BaseFragment<T : ViewDataBinding>(
             container,
             false
         )
-        // FIXME : lifecycleOwner 사용하는 이유
         _binding?.lifecycleOwner = viewLifecycleOwner
         return binding.root
     }

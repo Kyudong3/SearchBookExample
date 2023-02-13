@@ -1,8 +1,8 @@
 package com.kyudong3.searchbookexample.ui.widget.recyclerview.viewholder
 
-import android.view.View
 import android.widget.ImageView
 import androidx.databinding.ViewDataBinding
+import androidx.recyclerview.widget.RecyclerView
 import com.kyudong3.searchbookexample.R
 import com.kyudong3.searchbookexample.base.BaseViewHolder
 import com.kyudong3.searchbookexample.data.dto.BookDocument
@@ -10,7 +10,7 @@ import com.kyudong3.searchbookexample.data.dto.BookDocument
 
 class SearchBookViewHolder(
     val binding: ViewDataBinding,
-    private val itemClickListener: ((View, BookDocument) -> Unit)?
+    private val itemClickListener: ((BookDocument, Int) -> Unit)?
 ) : BaseViewHolder<BookDocument>(binding) {
 
     override fun bind(item: BookDocument) {
@@ -18,14 +18,17 @@ class SearchBookViewHolder(
 
         val favorite = binding.root.findViewById<ImageView>(R.id.iv_favorite)
         favorite.setOnClickListener {
-            itemClickListener?.invoke(it, item)
+            if (adapterPosition != RecyclerView.NO_POSITION) {
+                item.favorite = !item.favorite
+                itemClickListener?.invoke(item, adapterPosition)
+            }
         }
     }
 
     companion object {
         fun newInstance(
             binding: ViewDataBinding,
-            itemClickListener: ((View, BookDocument) -> Unit)?
+            itemClickListener: ((BookDocument, Int) -> Unit)?
         ) = SearchBookViewHolder(binding, itemClickListener)
     }
 }
