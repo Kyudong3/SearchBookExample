@@ -4,6 +4,14 @@
     <string name="search_book">책 검색</string>
     <string name="search">검색</string>
     <string name="bookmark">즐겨찾기</string>
+    <string name="confirm">확인</string>
+    <string name="close">닫기</string>
+
 
     <string name="hint_book_title">책 제목을 검색하세요</string>
+
+
+
+
+    <string name="empty_search_data">검색된 결과가 없습니다.</string>
 </resources>
