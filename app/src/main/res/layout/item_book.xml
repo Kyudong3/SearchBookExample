@@ -78,7 +78,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/icon_star" />
+            app:srcCompat="@drawable/icon_star"
+            app:tint="@{item.favorite ? @color/yellow : @color/gray}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

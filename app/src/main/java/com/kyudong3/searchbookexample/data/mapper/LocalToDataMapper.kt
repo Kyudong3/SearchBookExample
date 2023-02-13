@@ -10,5 +10,6 @@ internal fun com.kyudong3.searchbookexample.db.entity.BookDocument.toData() = Bo
     publisher = publisher,
     price = price,
     thumbnail = thumbnail,
-    status = status
+    status = status,
+    favorite = favorite
 )

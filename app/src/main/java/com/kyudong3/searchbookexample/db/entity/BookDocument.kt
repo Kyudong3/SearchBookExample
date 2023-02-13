@@ -21,5 +21,7 @@ data class BookDocument(
     @ColumnInfo(name = "thumbnail")
     val thumbnail: String,  // 도서 표지 미리보기 URL
     @ColumnInfo(name = "status")
-    val status: String      // 도서 판매 상태 정보 (정상, 품절, 절판 등)
+    val status: String,     // 도서 판매 상태 정보 (정상, 품절, 절판 등)
+    @ColumnInfo(name = "favorite")
+    val favorite: Boolean
 )
