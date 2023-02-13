@@ -1,13 +1,14 @@
 package com.kyudong3.searchbookexample.viewmodels
 
 import androidx.databinding.Bindable
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.kyudong3.searchbookexample.base.BaseViewModel
+import com.kyudong3.searchbookexample.base.SingleLiveEvent
 import com.kyudong3.searchbookexample.data.dto.BookDocument
 import com.kyudong3.searchbookexample.data.mapper.toEntity
 import com.kyudong3.searchbookexample.db.repository.BookDocumentRepository
 import com.kyudong3.searchbookexample.repository.SearchBookRepository
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 
@@ -19,17 +20,16 @@ class SearchBookViewModel(
     @get:Bindable
     var searchQuery: String = ""
 
-    private var _bookData = MutableLiveData<List<BookDocument>>(listOf())
-    val bookData: LiveData<List<BookDocument>> = _bookData
+    val bookData = SingleLiveEvent<List<BookDocument>>()
 
     fun onClickSearch() {
         searchBookRepository
             .searchBook(searchQuery)
             .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .flatMap { Single.just(it.documents) }
             .baseSubscribe {
-                if (it.documents.isNotEmpty()) {
-                    _bookData.postValue(it.documents)
-                }
+                bookData.value = it
             }
     }
 

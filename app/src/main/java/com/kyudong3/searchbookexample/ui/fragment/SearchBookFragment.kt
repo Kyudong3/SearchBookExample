@@ -6,6 +6,7 @@ import com.kyudong3.searchbookexample.BR
 import com.kyudong3.searchbookexample.R
 import com.kyudong3.searchbookexample.base.BaseFragment
 import com.kyudong3.searchbookexample.databinding.FragmentSearchBookBinding
+import com.kyudong3.searchbookexample.ui.widget.dialog.RxAlertDialog
 import com.kyudong3.searchbookexample.ui.widget.recyclerview.listadapter.SearchBookListAdapter
 import com.kyudong3.searchbookexample.viewmodels.SearchBookViewModel
 import javax.inject.Inject
@@ -32,7 +33,12 @@ class SearchBookFragment : BaseFragment<FragmentSearchBookBinding>(R.layout.frag
 
     private fun observe() {
         viewModel.bookData.observe(viewLifecycleOwner) {
-            searchBookListAdapter.submitList(it)
+            if (it.isEmpty()) {
+                searchBookListAdapter.submitList(null)
+                showAlertDialog()
+            } else {
+                searchBookListAdapter.submitList(it)
+            }
         }
     }
 
@@ -40,6 +46,15 @@ class SearchBookFragment : BaseFragment<FragmentSearchBookBinding>(R.layout.frag
         searchBookListAdapter.setItemClickListener { _, bookDocument ->
             viewModel.onClickBookmark(bookDocument)
         }
+    }
+
+    private fun showAlertDialog() {
+        RxAlertDialog
+            .from(requireContext())
+            .setCancelable(false)
+            .setMessage(R.string.empty_search_data)
+            .forObservable(R.string.confirm, R.string.close)
+            .baseSubscribe { }
     }
 
     companion object {
