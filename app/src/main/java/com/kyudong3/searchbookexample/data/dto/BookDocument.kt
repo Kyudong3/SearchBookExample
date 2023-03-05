@@ -9,5 +9,5 @@ data class BookDocument(
     val price: Int,         // 도서 판매가
     val thumbnail: String,  // 도서 표지 미리보기 URL
     val status: String,     // 도서 판매 상태 정보 (정상, 품절, 절판 등)
-    var favorite: Boolean = false
+    val favorite: Boolean
 )
