@@ -1,6 +1,7 @@
 package com.kyudong3.searchbookexample.utils.delegator
 
 import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.Disposable
@@ -41,6 +42,15 @@ interface DisposableDelegator {
 
     fun Completable.baseSubscribe(
         onComplete: () -> Unit
+    )
+
+    fun <T: Any> Flowable<T>.baseSubscribe(
+        onSuccess: (T) -> Unit
+    )
+
+    fun <T : Any> Flowable<T>.baseSubscribe(
+        onSuccess: (T) -> Unit,
+        onError: (Throwable) -> Unit = { it.printStackTrace() }
     )
 
     fun clearDisposable()

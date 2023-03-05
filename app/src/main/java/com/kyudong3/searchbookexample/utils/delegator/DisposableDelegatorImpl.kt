@@ -1,6 +1,7 @@
 package com.kyudong3.searchbookexample.utils.delegator
 
 import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -47,6 +48,15 @@ class DisposableDelegatorImpl : DisposableDelegator {
     override fun Completable.baseSubscribe(
         onComplete: () -> Unit
     ) = baseSubscribe(onComplete) {}
+
+    override fun <T : Any> Flowable<T>.baseSubscribe(
+        onSuccess: (T) -> Unit
+    ) = baseSubscribe(onSuccess) {}
+
+    override fun <T : Any> Flowable<T>.baseSubscribe(
+        onSuccess: (T) -> Unit,
+        onError: (Throwable) -> Unit
+    ) = subscribe(onSuccess, onError).add()
 
     override fun clearDisposable() {
         compositeDisposable.clear()
