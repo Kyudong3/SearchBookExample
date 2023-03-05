@@ -37,7 +37,9 @@ class BookmarkViewModel(
 
     fun onClickBookmark(bookDocument: BookDocument) {
         bookDocumentRepository
-            .deleteBookDocument(bookDocument.toEntity())
+            .deleteBookDocument(
+                bookDocument.copy(favorite = !bookDocument.favorite).toEntity()
+            )
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .baseSubscribe { }
