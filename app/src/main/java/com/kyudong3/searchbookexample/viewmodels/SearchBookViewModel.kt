@@ -35,7 +35,9 @@ class SearchBookViewModel(
 
     fun onClickBookmark(bookDocument: BookDocument) {
         bookDocumentRepository
-            .insertBookDocument(bookDocument.toEntity())
+            .insertBookDocument(
+                bookDocument.copy(favorite = !bookDocument.favorite).toEntity()
+            )
             .subscribeOn(Schedulers.io())
             .baseSubscribe { }
     }

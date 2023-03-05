@@ -3,7 +3,6 @@ package com.kyudong3.searchbookexample.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.kyudong3.searchbookexample.base.BaseViewModel
-import com.kyudong3.searchbookexample.base.SingleLiveEvent
 import com.kyudong3.searchbookexample.data.dto.BookDocument
 import com.kyudong3.searchbookexample.data.mapper.toData
 import com.kyudong3.searchbookexample.data.mapper.toEntity
@@ -19,9 +18,11 @@ class BookmarkViewModel(
     private var _bookData = MutableLiveData<List<BookDocument>>(listOf())
     val bookData: LiveData<List<BookDocument>> = _bookData
 
-    val refresh = SingleLiveEvent<Boolean>()
+    init {
+        getLocalBookDocuments()
+    }
 
-    fun getLocalBookDocuments() {
+    private fun getLocalBookDocuments() {
         bookDocumentRepository
             .getAll()
             .subscribeOn(Schedulers.io())
@@ -39,8 +40,6 @@ class BookmarkViewModel(
             .deleteBookDocument(bookDocument.toEntity())
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .baseSubscribe {
-                refresh.value = true
-            }
+            .baseSubscribe { }
     }
 }
