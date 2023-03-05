@@ -19,7 +19,6 @@ class SearchBookViewHolder(
         val favorite = binding.root.findViewById<ImageView>(R.id.iv_favorite)
         favorite.setOnClickListener {
             if (adapterPosition != RecyclerView.NO_POSITION) {
-//                item.favorite = !item.favorite
                 itemClickListener?.invoke(item, adapterPosition)
             }
         }

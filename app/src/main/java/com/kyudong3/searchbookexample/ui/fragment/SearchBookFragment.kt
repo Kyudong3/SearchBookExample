@@ -22,8 +22,7 @@ class SearchBookFragment : BaseFragment<FragmentSearchBookBinding>(R.layout.frag
     lateinit var searchBookListAdapter: SearchBookListAdapter
 
     val bookmarkItemClickListener: ((BookDocument, Int) -> Unit)? by lazy {
-        { document, position ->
-            searchBookListAdapter.notifyItemChanged(position)
+        { document, _ ->
             viewModel.onClickBookmark(document)
         }
     }
@@ -47,6 +46,8 @@ class SearchBookFragment : BaseFragment<FragmentSearchBookBinding>(R.layout.frag
                 searchBookListAdapter.submitList(it)
             }
         }
+
+        viewModel.localBookData.observe(viewLifecycleOwner) { }
     }
 
     private fun showAlertDialog() {
