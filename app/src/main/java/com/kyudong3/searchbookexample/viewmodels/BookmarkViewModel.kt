@@ -1,13 +1,13 @@
 package com.kyudong3.searchbookexample.viewmodels
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.kyudong3.searchbookexample.base.BaseViewModel
 import com.kyudong3.searchbookexample.data.dto.BookDocument
 import com.kyudong3.searchbookexample.data.mapper.toData
 import com.kyudong3.searchbookexample.data.mapper.toEntity
 import com.kyudong3.searchbookexample.db.repository.BookDocumentRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
@@ -16,8 +16,8 @@ class BookmarkViewModel(
     private val bookDocumentRepository: BookDocumentRepository
 ) : BaseViewModel() {
 
-    private var _bookData = MutableLiveData<List<BookDocument>>(listOf())
-    val bookData: LiveData<List<BookDocument>> = _bookData
+    private var _bookData: MutableStateFlow<List<BookDocument>> = MutableStateFlow(emptyList())
+    val bookData: StateFlow<List<BookDocument>> = _bookData
 
     init {
         getLocalBookDocuments()
@@ -32,7 +32,7 @@ class BookmarkViewModel(
                     val bookList = it.map { entity ->
                         entity.toData()
                     }
-                    _bookData.postValue(bookList)
+                    _bookData.value = bookList
                 }
         }
     }

@@ -1,16 +1,15 @@
 package com.kyudong3.searchbookexample.viewmodels
 
 import androidx.databinding.Bindable
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.kyudong3.searchbookexample.base.BaseViewModel
-import com.kyudong3.searchbookexample.base.SingleLiveEvent
 import com.kyudong3.searchbookexample.data.dto.BookDocument
 import com.kyudong3.searchbookexample.data.mapper.toData
 import com.kyudong3.searchbookexample.data.mapper.toEntity
 import com.kyudong3.searchbookexample.db.repository.BookDocumentRepository
 import com.kyudong3.searchbookexample.repository.SearchBookRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
@@ -23,10 +22,11 @@ class SearchBookViewModel(
     @get:Bindable
     var searchQuery: String = ""
 
-    val bookData = SingleLiveEvent<List<BookDocument>>()
+    private var _bookData: MutableStateFlow<List<BookDocument>> = MutableStateFlow(emptyList())
+    val bookData: StateFlow<List<BookDocument>> = _bookData
 
-    private var _localBookData = MutableLiveData<List<BookDocument>>(listOf())
-    val localBookData: LiveData<List<BookDocument>> = _localBookData
+    private var _localBookData: MutableStateFlow<List<BookDocument>> = MutableStateFlow(emptyList())
+    val localBookData: StateFlow<List<BookDocument>> = _localBookData
 
     init {
         getLocalBookmarkList()
@@ -38,11 +38,11 @@ class SearchBookViewModel(
                 .searchBook(searchQuery)
                 .catch { /* FIXME : Exception 추가 */ }
                 .collect { bookDocuments ->
-                    localBookData.value?.let { localDocuments ->
+                    _localBookData.value.let { localDocuments ->
                         if (localDocuments.isEmpty())
-                            bookData.value = bookDocuments
+                            _bookData.value = bookDocuments
                         else
-                            bookData.value = getSyncedDocuments(bookDocuments, localDocuments)
+                            _bookData.value = getSyncedDocuments(bookDocuments, localDocuments)
                     }
                 }
         }
@@ -87,20 +87,18 @@ class SearchBookViewModel(
                         entity.toData()
                     }
 
-                    _localBookData.value?.let {
-                        val diff = it.filterNot { localDocument ->
-                            localDocumentList.contains(localDocument)
-                        }
+                    val diff = _localBookData.value.filterNot { localDocument ->
+                        localDocumentList.contains(localDocument)
+                    }
 
-                        if (diff.isNotEmpty()) {
-                            bookData.value?.let { bookDocuments ->
-                                if (bookDocuments.isNotEmpty()) {
-                                    bookData.value = getSyncedDocuments(
-                                        bookDocuments,
-                                        localDocumentList,
-                                        diff.first()
-                                    )
-                                }
+                    if (diff.isNotEmpty()) {
+                        _bookData.value.let { bookDocuments ->
+                            if (bookDocuments.isNotEmpty()) {
+                                _bookData.value = getSyncedDocuments(
+                                    bookDocuments,
+                                    localDocumentList,
+                                    diff.first()
+                                )
                             }
                         }
                     }
@@ -138,15 +136,13 @@ class SearchBookViewModel(
     private fun updateDocument(copy: BookDocument) {
         val documentList = arrayListOf<BookDocument>()
 
-        bookData.value?.let { bookDocuments ->
-            bookDocuments.forEach {
-                if (it.url == copy.url)
-                    documentList.add(copy)
-                else
-                    documentList.add(it)
-            }
-
-            bookData.value = documentList
+        _bookData.value.forEach {
+            if (it.url == copy.url)
+                documentList.add(copy)
+            else
+                documentList.add(it)
         }
+
+        _bookData.value = documentList
     }
 }

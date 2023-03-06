@@ -2,6 +2,9 @@ package com.kyudong3.searchbookexample.ui.fragment
 
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.kyudong3.searchbookexample.BR
 import com.kyudong3.searchbookexample.R
 import com.kyudong3.searchbookexample.base.BaseFragment
@@ -10,6 +13,8 @@ import com.kyudong3.searchbookexample.databinding.FragmentSearchBookBinding
 import com.kyudong3.searchbookexample.ui.widget.dialog.RxAlertDialog
 import com.kyudong3.searchbookexample.ui.widget.recyclerview.listadapter.SearchBookListAdapter
 import com.kyudong3.searchbookexample.viewmodels.SearchBookViewModel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -38,12 +43,16 @@ class SearchBookFragment : BaseFragment<FragmentSearchBookBinding>(R.layout.frag
     }
 
     private fun observe() {
-        viewModel.bookData.observe(viewLifecycleOwner) {
-            if (it.isEmpty()) {
-                searchBookListAdapter.submitList(null)
-                showAlertDialog()
-            } else {
-                searchBookListAdapter.submitList(it)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.bookData.collectLatest {
+                    if (it.isEmpty()) {
+                        searchBookListAdapter.submitList(null)
+                        showAlertDialog()
+                    } else {
+                        searchBookListAdapter.submitList(it)
+                    }
+                }
             }
         }
     }
