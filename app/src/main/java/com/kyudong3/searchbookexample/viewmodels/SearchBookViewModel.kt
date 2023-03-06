@@ -11,8 +11,6 @@ import com.kyudong3.searchbookexample.data.mapper.toData
 import com.kyudong3.searchbookexample.data.mapper.toEntity
 import com.kyudong3.searchbookexample.db.repository.BookDocumentRepository
 import com.kyudong3.searchbookexample.repository.SearchBookRepository
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
@@ -80,35 +78,36 @@ class SearchBookViewModel(
     }
 
     private fun getLocalBookmarkList() {
-        bookDocumentRepository
-            .getAll()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .baseSubscribe { localDocuments ->
-                val localDocumentList = localDocuments.map { entity ->
-                    entity.toData()
-                }
-
-                _localBookData.value?.let {
-                    val diff = it.filterNot { localDocument ->
-                        localDocumentList.contains(localDocument)
+        viewModelScope.launch {
+            bookDocumentRepository
+                .getAll()
+                .catch { }
+                .collect { localDocuments ->
+                    val localDocumentList = localDocuments.map { entity ->
+                        entity.toData()
                     }
 
-                    if (diff.isNotEmpty()) {
-                        bookData.value?.let { bookDocuments ->
-                            if (bookDocuments.isNotEmpty()) {
-                                bookData.value = getSyncedDocuments(
-                                    bookDocuments,
-                                    localDocumentList,
-                                    diff.first()
-                                )
+                    _localBookData.value?.let {
+                        val diff = it.filterNot { localDocument ->
+                            localDocumentList.contains(localDocument)
+                        }
+
+                        if (diff.isNotEmpty()) {
+                            bookData.value?.let { bookDocuments ->
+                                if (bookDocuments.isNotEmpty()) {
+                                    bookData.value = getSyncedDocuments(
+                                        bookDocuments,
+                                        localDocumentList,
+                                        diff.first()
+                                    )
+                                }
                             }
                         }
                     }
-                }
 
-                _localBookData.value = localDocumentList
-            }
+                    _localBookData.value = localDocumentList
+                }
+        }
     }
 
     fun onClickBookmark(bookDocument: BookDocument) {
@@ -119,25 +118,21 @@ class SearchBookViewModel(
     }
 
     private fun deleteBookDocument(bookDocument: BookDocument) {
-        val copy = bookDocument.copy(favorite = false)
-        bookDocumentRepository
-            .deleteBookDocument(copy.toEntity())
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .baseSubscribe {
-                updateDocument(copy)
-            }
+        viewModelScope.launch {
+            val copy = bookDocument.copy(favorite = false)
+
+            bookDocumentRepository.deleteBookDocument(copy.toEntity())
+            updateDocument(copy)
+        }
     }
 
     private fun insertBookDocument(bookDocument: BookDocument) {
-        val copy = bookDocument.copy(favorite = true)
-        bookDocumentRepository
-            .insertBookDocument(copy.toEntity())
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .baseSubscribe {
-                updateDocument(copy)
-            }
+        viewModelScope.launch {
+            val copy = bookDocument.copy(favorite = true)
+
+            bookDocumentRepository.insertBookDocument(copy.toEntity())
+            updateDocument(copy)
+        }
     }
 
     private fun updateDocument(copy: BookDocument) {

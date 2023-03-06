@@ -2,13 +2,14 @@ package com.kyudong3.searchbookexample.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.kyudong3.searchbookexample.base.BaseViewModel
 import com.kyudong3.searchbookexample.data.dto.BookDocument
 import com.kyudong3.searchbookexample.data.mapper.toData
 import com.kyudong3.searchbookexample.data.mapper.toEntity
 import com.kyudong3.searchbookexample.db.repository.BookDocumentRepository
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.launch
 
 
 class BookmarkViewModel(
@@ -23,25 +24,24 @@ class BookmarkViewModel(
     }
 
     private fun getLocalBookDocuments() {
-        bookDocumentRepository
-            .getAll()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .baseSubscribe {
-                val bookList = it.map { entity ->
-                    entity.toData()
+        viewModelScope.launch {
+            bookDocumentRepository
+                .getAll()
+                .catch { /* FIXME: 에러처리 추가 */ }
+                .collect {
+                    val bookList = it.map { entity ->
+                        entity.toData()
+                    }
+                    _bookData.postValue(bookList)
                 }
-                _bookData.postValue(bookList)
-            }
+        }
     }
 
     fun onClickBookmark(bookDocument: BookDocument) {
-        bookDocumentRepository
-            .deleteBookDocument(
+        viewModelScope.launch {
+            bookDocumentRepository.deleteBookDocument(
                 bookDocument.copy(favorite = !bookDocument.favorite).toEntity()
             )
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .baseSubscribe { }
+        }
     }
 }
