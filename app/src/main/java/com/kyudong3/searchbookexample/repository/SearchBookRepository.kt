@@ -1,10 +1,10 @@
 package com.kyudong3.searchbookexample.repository
 
-import com.kyudong3.searchbookexample.repository.dao.SearchBookResponse
-import io.reactivex.rxjava3.core.Single
+import com.kyudong3.searchbookexample.data.dto.BookDocument
+import kotlinx.coroutines.flow.Flow
 
 
 interface SearchBookRepository {
 
-    fun searchBook(query: String): Single<SearchBookResponse>
+    fun searchBook(query: String): Flow<List<BookDocument>>
 }

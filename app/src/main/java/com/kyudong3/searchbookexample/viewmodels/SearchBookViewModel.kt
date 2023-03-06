@@ -3,6 +3,7 @@ package com.kyudong3.searchbookexample.viewmodels
 import androidx.databinding.Bindable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.kyudong3.searchbookexample.base.BaseViewModel
 import com.kyudong3.searchbookexample.base.SingleLiveEvent
 import com.kyudong3.searchbookexample.data.dto.BookDocument
@@ -11,8 +12,9 @@ import com.kyudong3.searchbookexample.data.mapper.toEntity
 import com.kyudong3.searchbookexample.db.repository.BookDocumentRepository
 import com.kyudong3.searchbookexample.repository.SearchBookRepository
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.launch
 
 
 class SearchBookViewModel(
@@ -33,19 +35,19 @@ class SearchBookViewModel(
     }
 
     fun onClickSearch() {
-        searchBookRepository
-            .searchBook(searchQuery)
-            .subscribeOn(Schedulers.io())
-            .flatMap { Single.just(it.documents) }
-            .observeOn(AndroidSchedulers.mainThread())
-            .baseSubscribe { bookDocuments ->
-                localBookData.value?.let { localDocuments ->
-                    if (localDocuments.isEmpty())
-                        bookData.value = bookDocuments
-                    else
-                        bookData.value = getSyncedDocuments(bookDocuments, localDocuments)
+        viewModelScope.launch {
+            searchBookRepository
+                .searchBook(searchQuery)
+                .catch { /* FIXME : Exception 추가 */ }
+                .collect { bookDocuments ->
+                    localBookData.value?.let { localDocuments ->
+                        if (localDocuments.isEmpty())
+                            bookData.value = bookDocuments
+                        else
+                            bookData.value = getSyncedDocuments(bookDocuments, localDocuments)
+                    }
                 }
-            }
+        }
     }
 
     private fun getSyncedDocuments(
