@@ -2,19 +2,18 @@ package com.kyudong3.searchbookexample.db.dao
 
 import androidx.room.*
 import com.kyudong3.searchbookexample.db.entity.BookDocument
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Flowable
+import kotlinx.coroutines.flow.Flow
 
 
 @Dao
 interface BookDocumentDao {
 
     @Query("SELECT * FROM book_document")
-    fun getAll(): Flowable<List<BookDocument>>
+    fun getAll(): Flow<List<BookDocument>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertBookDocument(item: BookDocument): Completable
+    suspend fun insertBookDocument(item: BookDocument)
 
     @Delete
-    fun deleteBookDocument(item: BookDocument): Completable
+    suspend fun deleteBookDocument(item: BookDocument)
 }
