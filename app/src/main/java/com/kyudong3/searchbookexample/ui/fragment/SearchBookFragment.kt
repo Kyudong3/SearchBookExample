@@ -46,8 +46,6 @@ class SearchBookFragment : BaseFragment<FragmentSearchBookBinding>(R.layout.frag
                 searchBookListAdapter.submitList(it)
             }
         }
-
-        viewModel.localBookData.observe(viewLifecycleOwner) { }
     }
 
     private fun showAlertDialog() {

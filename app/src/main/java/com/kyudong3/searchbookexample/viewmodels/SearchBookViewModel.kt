@@ -50,7 +50,8 @@ class SearchBookViewModel(
 
     private fun getSyncedDocuments(
         bookDocuments: List<BookDocument>,
-        localDocuments: List<BookDocument>
+        localDocuments: List<BookDocument>,
+        diffDocument: BookDocument? = null
     ): List<BookDocument> {
         val documentList = arrayListOf<BookDocument>()
 
@@ -61,7 +62,16 @@ class SearchBookViewModel(
 
             found?.let {
                 documentList.add(bookDocument.copy(favorite = it.favorite))
-            } ?: documentList.add(bookDocument)
+            } ?: run {
+                when {
+                    diffDocument == null ->
+                        documentList.add(bookDocument)
+                    bookDocument.url == diffDocument.url ->
+                        documentList.add(diffDocument.copy(favorite = !diffDocument.favorite))
+                    else ->
+                        documentList.add(bookDocument)
+                }
+            }
         }
 
         return documentList
@@ -72,10 +82,30 @@ class SearchBookViewModel(
             .getAll()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .baseSubscribe {
-                _localBookData.value = it.map { entity ->
+            .baseSubscribe { localDocuments ->
+                val localDocumentList = localDocuments.map { entity ->
                     entity.toData()
                 }
+
+                _localBookData.value?.let {
+                    val diff = it.filterNot { localDocument ->
+                        localDocumentList.contains(localDocument)
+                    }
+
+                    if (diff.isNotEmpty()) {
+                        bookData.value?.let { bookDocuments ->
+                            if (bookDocuments.isNotEmpty()) {
+                                bookData.value = getSyncedDocuments(
+                                    bookDocuments,
+                                    localDocumentList,
+                                    diff.first()
+                                )
+                            }
+                        }
+                    }
+                }
+
+                _localBookData.value = localDocumentList
             }
     }
 
